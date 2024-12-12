@@ -297,6 +297,7 @@ class FluentWindow:
         nav_width_expanded=200,
         animation_duration=100,
         show_back_button=True,
+        nav_item_spacing=2,
         state_manager: FluentState = FluentState
     ):
         self._page = page
@@ -312,6 +313,8 @@ class FluentWindow:
         self._page.accepts_drops = True
         self._page.blur_effect = True
         self._page.padding = 0
+        
+        self.nav_item_spacing = nav_item_spacing
         
         self.colors = {
             "nav_bg": "#1F1F1F",
@@ -473,18 +476,21 @@ class FluentWindow:
             ])
         
         nav_top_controls.append(
-            Button(
-                content=FluentIcon(
-                    FluentIcons.TEXT_ALIGN_JUSTIFY,
-                    size=18,
-                    color=self.colors["icon_color"]
+            ft.Container(
+                content=Button(
+                    content=FluentIcon(
+                        FluentIcons.TEXT_ALIGN_JUSTIFY,
+                        size=18,
+                        color=self.colors["icon_color"]
+                    ),
+                    on_click=lambda e: self.toggle_navigation_panel(e),
+                    variant=ButtonVariant.HYPERLINK,
+                    is_dark_mode=True,
                 ),
-                on_click=lambda e: self.toggle_navigation_panel(e),
-                variant=ButtonVariant.HYPERLINK,
-                is_dark_mode=True,
+                margin=ft.margin.only(top=10 if not show_back_button else 0, bottom=10)
             )
         )
-
+        
         # Create bottom navigation items
         bottom_nav_items = []
         for idx, item in enumerate(self.bottom_navigation_items):
@@ -499,9 +505,8 @@ class FluentWindow:
                     ft.Container(
                         ft.Column(
                             controls=nav_top_controls,
-                            spacing=2,
+                            spacing=self.nav_item_spacing,
                             horizontal_alignment=ft.CrossAxisAlignment.START,
-                            # margin=ft.margin.only(left=5)
                         ),
                         margin=ft.margin.only(left=5)
                     ),
@@ -509,7 +514,7 @@ class FluentWindow:
                     ft.Container(
                         content=ft.Column(
                             controls=self.nav_items,
-                            spacing=2,
+                            spacing=self.nav_item_spacing,
                             scroll=ft.ScrollMode.HIDDEN,  # Enable scrolling
                         ),
                         expand=True,
@@ -518,7 +523,7 @@ class FluentWindow:
                     # Bottom section
                     ft.Column(
                         controls=bottom_nav_items,
-                        spacing=2,
+                        spacing=self.nav_item_spacing,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     ) if bottom_nav_items else None
                 ],

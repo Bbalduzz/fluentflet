@@ -6,3 +6,10 @@ t.py
 flipview.py
 git_changes_summary.md
 # changes.md
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
