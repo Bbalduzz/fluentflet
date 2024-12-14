@@ -8,7 +8,7 @@ from PIL import Image
 
 import flet as ft
 from flet.version import version as flet_version
-from flet_runtime.utils import is_macos, is_windows, is_linux
+from flet.utils import is_macos, is_windows, is_linux
 
 # Optional platform-specific imports
 try:
