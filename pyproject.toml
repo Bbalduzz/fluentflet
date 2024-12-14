@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "fluentflet"
+version = "0.1.0"
+description = ""
+authors = ["tct123 <42028373+tct123@users.noreply.github.com>"]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Pillow = "11.0.0"
+PyGetWindow = { version = "^0.0.9", markers = "sys_platform == 'win32'" }
+pywin32 = { version = "^306", markers = "sys_platform == 'win32'" }
+AppKit = { version = "0.2.8", markers = "sys_platform == 'darvin'" }
+flet = { extras = ["all"], version = "^0.25.2" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
