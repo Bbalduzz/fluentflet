@@ -3,6 +3,7 @@ from time import sleep
 from enum import Enum
 from fluentflet.components import Button, ButtonVariant
 
+
 class ToastPosition(Enum):
     TOP_LEFT = "top-left"
     TOP_RIGHT = "top-right"
@@ -11,9 +12,11 @@ class ToastPosition(Enum):
     BOTTOM_RIGHT = "bottom-right"
     BOTTOM_CENTER = "bottom-center"
 
+
 class ToastVariant(Enum):
     SINGLE_LINE = "single-line"
     MULTI_LINE = "multi-line"
+
 
 class ToastSeverity(Enum):
     INFORMATIONAL = "informational"
@@ -21,10 +24,12 @@ class ToastSeverity(Enum):
     WARNING = "warning"
     CRITICAL = "critical"
 
+
 class ToastActionType(Enum):
     NONE = "none"
     HYPERLINK = "hyperlink"
     DEFAULT = "default"
+
 
 class ToastColors(Enum):
     INFORMATIONAL = {
@@ -80,6 +85,7 @@ class ToastColors(Enum):
         },
     }
 
+
 class Toast(ft.Container):
     def __init__(
         self,
@@ -104,24 +110,26 @@ class Toast(ft.Container):
 
         # Get colors based on severity
         colors = self.get_colors(severity)
-        
+
         # Create content based on variant and action type
         content = self.create_content(
-            severity, 
+            severity,
             variant,
             title,
-            message, 
+            message,
             colors,
             action_type,
             action_text,
             action_url,
-            on_action
+            on_action,
         )
 
         # Set height based on variant
-        height = kwargs.get("height", 50 if variant == ToastVariant.SINGLE_LINE else None)
+        height = kwargs.get(
+            "height", 50 if variant == ToastVariant.SINGLE_LINE else None
+        )
         animate_pos, offset = self.get_animation_config(position)
-        
+
         super().__init__(
             content=content,
             bgcolor=colors["bgcolor"],
@@ -147,43 +155,47 @@ class Toast(ft.Container):
     def create_action_button(self, action_type, text, url, on_action, colors):
         if action_type == ToastActionType.NONE:
             return None
-        
+
         if action_type == ToastActionType.HYPERLINK:
             return ft.TextButton(
                 text=text,
                 url=url,
                 style=ft.ButtonStyle(
                     color=colors["text_color"],
-                )
+                ),
             )
-        
+
         return ft.TextButton(
             text=text,
             on_click=on_action,
             style=ft.ButtonStyle(
                 color=colors["text_color"],
-            )
+            ),
         )
 
     def create_content(
-        self, 
-        severity, 
-        variant, 
+        self,
+        severity,
+        variant,
         title,
-        message, 
+        message,
         colors,
         action_type,
         action_text,
         action_url,
-        on_action
+        on_action,
     ):
         # Create severity icon
         icon = self.get_severity_icon(severity)
-        icon_widget = ft.Icon(
-            name=icon,
-            size=20,
-            color=colors["icon_color"],
-        ) if icon else None
+        icon_widget = (
+            ft.Icon(
+                name=icon,
+                size=20,
+                color=colors["icon_color"],
+            )
+            if icon
+            else None
+        )
 
         # Create close button
         close_button = Button(
@@ -203,18 +215,23 @@ class Toast(ft.Container):
                             size=14,
                             weight=ft.FontWeight.W_500,
                         ),
-                        ft.Text(
-                            message,
-                            color=colors["text_color"],
-                            size=14,
-                        ) if message else None,
+                        (
+                            ft.Text(
+                                message,
+                                color=colors["text_color"],
+                                size=14,
+                            )
+                            if message
+                            else None
+                        ),
                     ],
                     spacing=4,
                     alignment=ft.MainAxisAlignment.START,
                 ),
-                padding=ft.padding.only(top=12, bottom=12)
-            ) if variant == ToastVariant.MULTI_LINE else
-            ft.Row(
+                padding=ft.padding.only(top=12, bottom=12),
+            )
+            if variant == ToastVariant.MULTI_LINE
+            else ft.Row(
                 controls=[
                     ft.Text(
                         title,
@@ -222,11 +239,15 @@ class Toast(ft.Container):
                         size=14,
                         weight=ft.FontWeight.W_500,
                     ),
-                    ft.Text(
-                        message,
-                        color=colors["text_color"],
-                        size=14,
-                    ) if message else None,
+                    (
+                        ft.Text(
+                            message,
+                            color=colors["text_color"],
+                            size=14,
+                        )
+                        if message
+                        else None
+                    ),
                 ],
                 spacing=12,
                 alignment=ft.MainAxisAlignment.START,
@@ -244,10 +265,7 @@ class Toast(ft.Container):
                     expand=True,
                     padding=ft.padding.only(left=13),
                 ),
-                ft.Container(
-                    close_button,
-                    margin=ft.margin.only(right=12)
-                )
+                ft.Container(close_button, margin=ft.margin.only(right=12)),
             ],
             alignment=ft.MainAxisAlignment.START,
         )
@@ -260,19 +278,19 @@ class Toast(ft.Container):
             ToastSeverity.CRITICAL: ft.Icons.ERROR_OUTLINE_ROUNDED,
         }
         return icons.get(severity)
-    
+
     def get_animation_config(self, position):
         """Returns the appropriate animation configuration based on position"""
         if not position:
             return ft.Offset(0, 0), ft.Offset(0, 0)
-            
+
         animations = {
             "top-left": (ft.Offset(-1, 0), ft.Offset(-1, 0)),  # Slide from left
-            "top-right": (ft.Offset(1, 0), ft.Offset(1, 0)),   # Slide from right
-            "top-center": (ft.Offset(0, -1), ft.Offset(0, -1)), # Slide from top
-            "bottom-left": (ft.Offset(-1, 0), ft.Offset(-1, 0)), # Slide from left
+            "top-right": (ft.Offset(1, 0), ft.Offset(1, 0)),  # Slide from right
+            "top-center": (ft.Offset(0, -1), ft.Offset(0, -1)),  # Slide from top
+            "bottom-left": (ft.Offset(-1, 0), ft.Offset(-1, 0)),  # Slide from left
             "bottom-right": (ft.Offset(1, 0), ft.Offset(1, 0)),  # Slide from right
-            "bottom-center": (ft.Offset(0, 1), ft.Offset(0, 1)), # Slide from bottom
+            "bottom-center": (ft.Offset(0, 1), ft.Offset(0, 1)),  # Slide from bottom
         }
         return animations.get(position, (ft.Offset(0, 0), ft.Offset(0, 0)))
 
@@ -289,7 +307,8 @@ class Toast(ft.Container):
         self.opacity = 0
         self.scale = 0.95
         self.update()
-    
+
+
 class Toaster:
     def __init__(
         self,
@@ -309,14 +328,14 @@ class Toaster:
         self.default_offset = default_offset
         self.is_hovered = False
         self.is_expanded = expand
-        
+
         # Dictionary to store position-specific stacks and toasts
         self.position_stacks = {}
         self.position_toasts = {}
-        
+
         # Initialize default stack
         self.initialize_position_stack(self.default_position)
-        
+
         self.page.on_resized = self.handle_resize
 
     def initialize_position_stack(self, position):
@@ -350,10 +369,10 @@ class Toaster:
         if isinstance(position, ToastPosition):
             position = position.value
         position = position or self.default_position
-        
+
         # Initialize stack for this position if it doesn't exist
         self.initialize_position_stack(position)
-        
+
         # Create or use provided toast
         toast = (
             toast
@@ -371,25 +390,27 @@ class Toaster:
                 **kwargs
             )
         )
-        
+
         # Get the position-specific stack and toasts list
         stack = self.position_stacks[position]
         toasts = self.position_toasts[position]
-        
+
         # Position and add the toast
         self.set_toast_position(toast, 0, position)
         stack.controls.append(toast)
         toasts.insert(0, toast)
         self.reposition_toasts(position)
         self.page.update()
-        
+
         # Trigger entrance animation after a brief delay
         def trigger_animation():
             sleep(0.05)  # Small delay to ensure the toast is rendered
             toast.animate_entrance()
+
         self.page.run_thread(trigger_animation)
 
         if duration > 0:
+
             def __remove_toast():
                 sleep(duration)
                 if toast in stack.controls:
@@ -401,17 +422,17 @@ class Toaster:
             self.page.run_thread(__remove_toast)
 
     def update_toast(
-        self, 
-        toast, 
-        message, 
-        description, 
-        severity, 
+        self,
+        toast,
+        message,
+        description,
+        severity,
         position,
         variant=ToastVariant.SINGLE_LINE,
         action_type=ToastActionType.NONE,
         action_text=None,
         action_url=None,
-        on_action=None
+        on_action=None,
     ):
         colors = ToastColors[severity.name].value["dark"]
         toast.content = toast.create_content(
@@ -423,7 +444,7 @@ class Toaster:
             action_type,
             action_text,
             action_url,
-            on_action
+            on_action,
         )
         toast.bgcolor = colors["bgcolor"]
         toast.border = ft.border.all(1, colors["border_color"])
@@ -434,7 +455,7 @@ class Toaster:
     def remove_toast(self, toast, position):
         stack = self.position_stacks[position]
         toasts = self.position_toasts[position]
-        
+
         if toast in stack.controls:
             stack.controls.remove(toast)
             toasts.remove(toast)

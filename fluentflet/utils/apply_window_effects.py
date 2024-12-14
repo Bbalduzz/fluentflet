@@ -4,8 +4,10 @@ import time
 import sys
 from enum import Enum, auto
 
+
 class BlurMode(Enum):
     ACRYLIC = auto()
+
 
 def _find_flet_window(title):
     windows = []
@@ -24,6 +26,7 @@ def _find_flet_window(title):
 
     return windows[0] if windows else None
 
+
 def _hex_to_rgba_int(hex_color: str) -> int:
     """Convert hex color string to RGBA integer value."""
     alpha = hex_color[7:]
@@ -32,8 +35,9 @@ def _hex_to_rgba_int(hex_color: str) -> int:
     red = hex_color[1:3]
     return int(alpha + blue + green + red, 16)
 
+
 def _apply_blur(self):
-    if sys.platform != 'win32':
+    if sys.platform != "win32":
         return
 
     self.bgcolor = "transparent"
@@ -51,14 +55,14 @@ def _apply_blur(self):
                     ("AccentState", ctypes.c_uint),
                     ("AccentFlags", ctypes.c_uint),
                     ("GradientColor", ctypes.c_uint),
-                    ("AnimationId", ctypes.c_uint)
+                    ("AnimationId", ctypes.c_uint),
                 ]
 
             class WINDOWCOMPOSITIONATTRIBDATA(ctypes.Structure):
                 _fields_ = [
                     ("Attribute", ctypes.c_int),
                     ("Data", ctypes.POINTER(ctypes.c_int)),
-                    ("SizeOfData", ctypes.c_size_t)
+                    ("SizeOfData", ctypes.c_size_t),
                 ]
 
             # Create and configure accent policy
@@ -73,7 +77,9 @@ def _apply_blur(self):
             data = WINDOWCOMPOSITIONATTRIBDATA()
             data.Attribute = 19  # WCA_ACCENT_POLICY
             data.SizeOfData = ctypes.sizeof(accent)
-            data.Data = ctypes.cast(ctypes.pointer(accent), ctypes.POINTER(ctypes.c_int))
+            data.Data = ctypes.cast(
+                ctypes.pointer(accent), ctypes.POINTER(ctypes.c_int)
+            )
 
             # Apply the acrylic blur effect
             ctypes.windll.user32.SetWindowCompositionAttribute(hwnd, ctypes.byref(data))
@@ -87,7 +93,7 @@ def _apply_blur(self):
                 hwnd,
                 33,  # DWMWA_WINDOW_CORNER_PREFERENCE
                 ctypes.byref(ctypes.c_int(2)),  # DWMWCP_SMALL
-                ctypes.sizeof(ctypes.c_int)
+                ctypes.sizeof(ctypes.c_int),
             )
             break
 

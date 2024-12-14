@@ -1,7 +1,8 @@
 import flet as ft
 from fluentflet.utils import FluentIcon, FluentIcons, FluentIconStyle
 from fluentflet.utils.fluent_design_system import FluentDesignSystem
-from fluentflet.components.button import Button, ButtonVariant 
+from fluentflet.components.button import Button, ButtonVariant
+
 
 class TextBox(ft.Container):
     def __init__(
@@ -19,8 +20,10 @@ class TextBox(ft.Container):
     ):
         # Keep the kwargs handling for TextField
         textfield_props = set(dir(ft.TextField)) - set(dir(ft.Container))
-        textfield_props = {prop for prop in textfield_props if not prop.startswith('_')}
-        textfield_kwargs = {k: kwargs.pop(k) for k in dict(kwargs) if k in textfield_props}
+        textfield_props = {prop for prop in textfield_props if not prop.startswith("_")}
+        textfield_kwargs = {
+            k: kwargs.pop(k) for k in dict(kwargs) if k in textfield_props
+        }
 
         super().__init__(**kwargs)
         self.design_system = design_system
@@ -32,11 +35,11 @@ class TextBox(ft.Container):
         self.actions_visible = actions_visible
         self._action = None
         self.is_password = password
-        
+
         # padding based on actions and prefix/suffix
         right_padding = 40 if password else 10
         left_padding = 10
-        
+
         self.prefix_text = None
         if prefix:
             self.prefix_text = ft.Text(
@@ -45,8 +48,10 @@ class TextBox(ft.Container):
                 color=self.theme.colors.get_color("text_tertiary"),
                 weight=ft.FontWeight.W_400,
             )
-            left_padding = len(prefix) * (text_size * 0.6) + 15  # Approximate character width
-        
+            left_padding = (
+                len(prefix) * (text_size * 0.6) + 15
+            )  # Approximate character width
+
         self.suffix_text = None
         if suffix:
             self.suffix_text = ft.Text(
@@ -55,8 +60,10 @@ class TextBox(ft.Container):
                 color=self.theme.colors.get_color("text_tertiary"),
                 weight=ft.FontWeight.W_400,
             )
-            right_padding += len(suffix) * (text_size * 0.6) + 5  # Approximate character width
-        
+            right_padding += (
+                len(suffix) * (text_size * 0.6) + 5
+            )  # Approximate character width
+
         # Create the text field with modified hint style
         self.textfield = ft.TextField(
             border=ft.InputBorder.NONE,
@@ -76,7 +83,9 @@ class TextBox(ft.Container):
             ),
             on_focus=self._handle_focus,
             on_blur=self._handle_blur,
-            content_padding=ft.padding.only(left=left_padding, right=right_padding, bottom=7),
+            content_padding=ft.padding.only(
+                left=left_padding, right=right_padding, bottom=7
+            ),
             **textfield_kwargs
         )
 
@@ -94,7 +103,7 @@ class TextBox(ft.Container):
             right=4,
             top=0,
         )
-        
+
         # Create stack controls list
         stack_controls = [
             ft.Container(
@@ -107,7 +116,7 @@ class TextBox(ft.Container):
                 bottom=0,
                 width=width,
             ),
-            self.actions_container
+            self.actions_container,
         ]
 
         # Add prefix label if provided
@@ -137,14 +146,12 @@ class TextBox(ft.Container):
                 variant=ButtonVariant.HYPERLINK,
                 width=28,
                 height=28,
-                on_click=self._handle_button_click
+                on_click=self._handle_button_click,
             )
             self.actions_row.controls.append(self.button)
-        
+
         # Setup container properties
-        self.content = ft.Stack(
-            controls=stack_controls
-        )
+        self.content = ft.Stack(controls=stack_controls)
         self.width = width
         self.bgcolor = self.default_bgcolor
         self.border_radius = self.design_system.control_properties.control_corner_radius
@@ -153,14 +160,18 @@ class TextBox(ft.Container):
     def _get_button_icon(self):
         if self.is_password:
             return FluentIcon(
-                name=FluentIcons.EYE_HIDE if self.textfield.password else FluentIcons.EYE_SHOW,
+                name=(
+                    FluentIcons.EYE_HIDE
+                    if self.textfield.password
+                    else FluentIcons.EYE_SHOW
+                ),
                 size=16,
-                color=self.theme.colors.get_color("text_primary")
+                color=self.theme.colors.get_color("text_primary"),
             )
         return FluentIcon(
             name=FluentIcons.SEARCH,
             size=16,
-            color=self.theme.colors.get_color("text_primary")
+            color=self.theme.colors.get_color("text_primary"),
         )
 
     def _handle_button_click(self, e):
@@ -200,15 +211,13 @@ class TextBox(ft.Container):
         button = Button(
             design_system=self.design_system,
             content=FluentIcon(
-                name=icon,
-                size=16,
-                color=self.theme.colors.get_color("text_primary")
+                name=icon, size=16, color=self.theme.colors.get_color("text_primary")
             ),
             variant=ButtonVariant.HYPERLINK,
             width=28,
             height=28,
             on_click=on_click,
-            tooltip=tooltip
+            tooltip=tooltip,
         )
         self.actions_row.controls.append(button)
         if self.page:

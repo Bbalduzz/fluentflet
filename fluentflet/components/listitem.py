@@ -1,21 +1,26 @@
 import flet as ft
 from fluentflet.utils.fluent_design_system import FluentDesignSystem
 
+
 class ListItem(ft.GestureDetector):
     instances = []
 
     def __init__(
         self,
         content,
-        on_click = None,
+        on_click=None,
         is_dark_mode: bool = True,
         selected: bool = False,
         **kwargs
     ):
         # Initialize design system
         self.design_system = FluentDesignSystem()
-        self.theme = self.design_system.dark_theme if is_dark_mode else self.design_system.light_theme
-        
+        self.theme = (
+            self.design_system.dark_theme
+            if is_dark_mode
+            else self.design_system.light_theme
+        )
+
         self.item_content = content
         self._on_click = on_click
         self.is_hovered = False
@@ -24,13 +29,13 @@ class ListItem(ft.GestureDetector):
 
         # Add this instance to the class instances list
         ListItem.instances.append(self)
-        
+
         # Main content container
         self.content_container = ft.Container(
             content=self.item_content,
             padding=ft.padding.only(left=11, top=10, right=10, bottom=10),
         )
-        
+
         # Stack allows absolute positioning of children
         self.container = ft.Container(
             content=ft.Stack(
@@ -42,8 +47,7 @@ class ListItem(ft.GestureDetector):
                         bgcolor=self.theme.colors.get_color("accent_default"),
                         border_radius=ft.border_radius.all(4),
                         animate=ft.animation.Animation(
-                            duration=100,
-                            curve=ft.AnimationCurve.ELASTIC_OUT
+                            duration=100, curve=ft.AnimationCurve.ELASTIC_OUT
                         ),
                         expand=True,
                         visible=False,
@@ -55,9 +59,9 @@ class ListItem(ft.GestureDetector):
             border_radius=self.design_system.control_properties.control_corner_radius,
             animate=ft.animation.Animation(
                 duration=self.design_system.control_properties.control_fast_duration,
-                curve=ft.AnimationCurve.EASE_OUT
+                curve=ft.AnimationCurve.EASE_OUT,
             ),
-            expand=True
+            expand=True,
         )
 
         # Store reference to indicator
@@ -89,15 +93,19 @@ class ListItem(ft.GestureDetector):
             if value:
                 # Deselect other items first
                 ListItem.deselect_all(except_item=self)
-            
+
             self._is_selected = value
             self.indicator.visible = value
             self.update_color()
             self.indicator.update()
-            
+
     def update_theme(self, is_dark_mode: bool):
         """Update list item theme colors"""
-        self.theme = self.design_system.dark_theme if is_dark_mode else self.design_system.light_theme
+        self.theme = (
+            self.design_system.dark_theme
+            if is_dark_mode
+            else self.design_system.light_theme
+        )
         self.indicator.bgcolor = self.theme.colors.get_color("accent_default")
         self.update_color()
 

@@ -3,10 +3,12 @@ from enum import Enum
 import asyncio
 from fluentflet.utils.fluent_design_system import FluentDesignSystem
 
+
 class CheckState(Enum):
     UNCHECKED = "unchecked"
     CHECKED = "checked"
     INDETERMINATE = "indeterminate"
+
 
 class Checkbox(ft.Container):
     CHECK_ICON_SIZE = 10
@@ -25,37 +27,69 @@ class Checkbox(ft.Container):
     ):
         # Initialize parent first
         super().__init__(animate=ft.animation.Animation(100, "easeOut"), **kwargs)
-        
+
         # Initialize design system
         self.design_system = design_system or FluentDesignSystem()
-        self.theme = self.design_system.dark_theme if is_dark_mode else self.design_system.light_theme
-        
+        self.theme = (
+            self.design_system.dark_theme
+            if is_dark_mode
+            else self.design_system.light_theme
+        )
+
         # Define style configurations
         styles = {
             "box_bgcolor": {
-                ft.ControlState.DEFAULT: self.theme.fills.get_fill("control_fill_tertiary"),
-                ft.ControlState.HOVERED: self.theme.fills.get_fill("control_fill_secondary"),
-                ft.ControlState.PRESSED: self.theme.fills.get_fill("control_fill_tertiary"),
-                ft.ControlState.DISABLED: self.theme.fills.get_fill("control_fill_disabled")
+                ft.ControlState.DEFAULT: self.theme.fills.get_fill(
+                    "control_fill_tertiary"
+                ),
+                ft.ControlState.HOVERED: self.theme.fills.get_fill(
+                    "control_fill_secondary"
+                ),
+                ft.ControlState.PRESSED: self.theme.fills.get_fill(
+                    "control_fill_tertiary"
+                ),
+                ft.ControlState.DISABLED: self.theme.fills.get_fill(
+                    "control_fill_disabled"
+                ),
             },
             "border": {
-                ft.ControlState.DEFAULT: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.0578)),
-                ft.ControlState.HOVERED: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.078)),
-                ft.ControlState.PRESSED: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.0578)),
-                ft.ControlState.DISABLED: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.042))
+                ft.ControlState.DEFAULT: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.0578)
+                ),
+                ft.ControlState.HOVERED: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.078)
+                ),
+                ft.ControlState.PRESSED: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.0578)
+                ),
+                ft.ControlState.DISABLED: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.042)
+                ),
             },
             "checked_bgcolor": {
                 ft.ControlState.DEFAULT: self.theme.colors.get_color("accent_default"),
-                ft.ControlState.HOVERED: self.theme.colors.get_color("accent_secondary"),
+                ft.ControlState.HOVERED: self.theme.colors.get_color(
+                    "accent_secondary"
+                ),
                 ft.ControlState.PRESSED: self.theme.colors.get_color("accent_tertiary"),
-                ft.ControlState.DISABLED: self.theme.colors.get_color("accent_disabled")
+                ft.ControlState.DISABLED: self.theme.colors.get_color(
+                    "accent_disabled"
+                ),
             },
             "check_color": {
-                ft.ControlState.DEFAULT: self.theme.colors.get_color("text_on_accent_primary"),
-                ft.ControlState.HOVERED: self.theme.colors.get_color("text_on_accent_primary"),
-                ft.ControlState.PRESSED: self.theme.colors.get_color("text_on_accent_secondary"),
-                ft.ControlState.DISABLED: self.theme.colors.get_color("text_on_accent_disabled")
-            }
+                ft.ControlState.DEFAULT: self.theme.colors.get_color(
+                    "text_on_accent_primary"
+                ),
+                ft.ControlState.HOVERED: self.theme.colors.get_color(
+                    "text_on_accent_primary"
+                ),
+                ft.ControlState.PRESSED: self.theme.colors.get_color(
+                    "text_on_accent_secondary"
+                ),
+                ft.ControlState.DISABLED: self.theme.colors.get_color(
+                    "text_on_accent_disabled"
+                ),
+            },
         }
 
         self.state = state
@@ -68,7 +102,9 @@ class Checkbox(ft.Container):
         self._pressed = False
 
         # Get initial state
-        initial_state = ft.ControlState.DISABLED if disabled else ft.ControlState.DEFAULT
+        initial_state = (
+            ft.ControlState.DISABLED if disabled else ft.ControlState.DEFAULT
+        )
 
         # Create a Container for the icon to handle animations
         self.check_icon = ft.Icon(
@@ -83,11 +119,11 @@ class Checkbox(ft.Container):
             content=self.check_icon,
             animate_scale=ft.animation.Animation(
                 duration=self.design_system.control_properties.control_normal_duration,
-                curve="decelerate"
+                curve="decelerate",
             ),
             scale=1 if state != CheckState.UNCHECKED else 0,
         )
-        
+
         # Create checkbox container
         self.checkbox = ft.Container(
             width=size,
@@ -95,11 +131,15 @@ class Checkbox(ft.Container):
             border_radius=self.design_system.control_properties.control_corner_radius,
             animate=ft.animation.Animation(
                 duration=self.design_system.control_properties.control_fast_duration,
-                curve="easeOut"
+                curve="easeOut",
             ),
             content=self.icon_container,
             alignment=ft.alignment.center,
-            bgcolor=styles["checked_bgcolor"][initial_state] if state != CheckState.UNCHECKED else styles["box_bgcolor"][initial_state],
+            bgcolor=(
+                styles["checked_bgcolor"][initial_state]
+                if state != CheckState.UNCHECKED
+                else styles["box_bgcolor"][initial_state]
+            ),
             border=ft.border.all(width=1, color=styles["border"][initial_state].color),
         )
 
@@ -109,10 +149,15 @@ class Checkbox(ft.Container):
             content.append(
                 ft.Text(
                     label,
-                    size=int(self.design_system.font_sizes.body_font_size.replace("px", "")),
+                    size=int(
+                        self.design_system.font_sizes.body_font_size.replace("px", "")
+                    ),
                     font_family=self.design_system.font_families.font_family_text,
-                    color=self.theme.colors.get_color("text_disabled") if disabled 
-                          else self.theme.colors.get_color("text_primary"),
+                    color=(
+                        self.theme.colors.get_color("text_disabled")
+                        if disabled
+                        else self.theme.colors.get_color("text_primary")
+                    ),
                 )
             )
 
@@ -120,36 +165,68 @@ class Checkbox(ft.Container):
         self.content = ft.Row(content, spacing=8)
         self.on_click = self._on_click if not disabled else None
         self.on_hover = self._on_hover if not disabled else None
-        
+
     def update_theme(self, is_dark_mode: bool):
         """Update checkbox theme colors"""
-        self.theme = self.design_system.dark_theme if is_dark_mode else self.design_system.light_theme
+        self.theme = (
+            self.design_system.dark_theme
+            if is_dark_mode
+            else self.design_system.light_theme
+        )
         # Update style configurations with new theme
         self.style_config = {
             "box_bgcolor": {
-                ft.ControlState.DEFAULT: self.theme.fills.get_fill("control_fill_tertiary"),
-                ft.ControlState.HOVERED: self.theme.fills.get_fill("control_fill_secondary"),
-                ft.ControlState.PRESSED: self.theme.fills.get_fill("control_fill_tertiary"),
-                ft.ControlState.DISABLED: self.theme.fills.get_fill("control_fill_disabled")
+                ft.ControlState.DEFAULT: self.theme.fills.get_fill(
+                    "control_fill_tertiary"
+                ),
+                ft.ControlState.HOVERED: self.theme.fills.get_fill(
+                    "control_fill_secondary"
+                ),
+                ft.ControlState.PRESSED: self.theme.fills.get_fill(
+                    "control_fill_tertiary"
+                ),
+                ft.ControlState.DISABLED: self.theme.fills.get_fill(
+                    "control_fill_disabled"
+                ),
             },
             "border": {
-                ft.ControlState.DEFAULT: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.0578)),
-                ft.ControlState.HOVERED: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.078)),
-                ft.ControlState.PRESSED: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.0578)),
-                ft.ControlState.DISABLED: ft.BorderSide(1, self.theme.fills.get_fill("control_fill_default", 0.042))
+                ft.ControlState.DEFAULT: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.0578)
+                ),
+                ft.ControlState.HOVERED: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.078)
+                ),
+                ft.ControlState.PRESSED: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.0578)
+                ),
+                ft.ControlState.DISABLED: ft.BorderSide(
+                    1, self.theme.fills.get_fill("control_fill_default", 0.042)
+                ),
             },
             "checked_bgcolor": {
                 ft.ControlState.DEFAULT: self.theme.colors.get_color("accent_default"),
-                ft.ControlState.HOVERED: self.theme.colors.get_color("accent_secondary"),
+                ft.ControlState.HOVERED: self.theme.colors.get_color(
+                    "accent_secondary"
+                ),
                 ft.ControlState.PRESSED: self.theme.colors.get_color("accent_tertiary"),
-                ft.ControlState.DISABLED: self.theme.colors.get_color("accent_disabled")
+                ft.ControlState.DISABLED: self.theme.colors.get_color(
+                    "accent_disabled"
+                ),
             },
             "check_color": {
-                ft.ControlState.DEFAULT: self.theme.colors.get_color("text_on_accent_primary"),
-                ft.ControlState.HOVERED: self.theme.colors.get_color("text_on_accent_primary"),
-                ft.ControlState.PRESSED: self.theme.colors.get_color("text_on_accent_secondary"),
-                ft.ControlState.DISABLED: self.theme.colors.get_color("text_on_accent_disabled")
-            }
+                ft.ControlState.DEFAULT: self.theme.colors.get_color(
+                    "text_on_accent_primary"
+                ),
+                ft.ControlState.HOVERED: self.theme.colors.get_color(
+                    "text_on_accent_primary"
+                ),
+                ft.ControlState.PRESSED: self.theme.colors.get_color(
+                    "text_on_accent_secondary"
+                ),
+                ft.ControlState.DISABLED: self.theme.colors.get_color(
+                    "text_on_accent_disabled"
+                ),
+            },
         }
         self._update_checkbox_style()
 
@@ -172,8 +249,12 @@ class Checkbox(ft.Container):
 
     def _get_next_state(self):
         if not self.three_state:
-            return CheckState.CHECKED if self.state == CheckState.UNCHECKED else CheckState.UNCHECKED
-        
+            return (
+                CheckState.CHECKED
+                if self.state == CheckState.UNCHECKED
+                else CheckState.UNCHECKED
+            )
+
         if self.state == CheckState.UNCHECKED:
             return CheckState.CHECKED
         elif self.state == CheckState.CHECKED:
@@ -199,22 +280,21 @@ class Checkbox(ft.Container):
         self.update()
 
     def _update_checkbox_style(self):
-        if not hasattr(self, 'page'):
+        if not hasattr(self, "page"):
             return
-            
+
         control_state = self._get_current_state()
-        
+
         self.checkbox.bgcolor = (
-            self.style_config["checked_bgcolor"][control_state] 
-            if self.state != CheckState.UNCHECKED 
+            self.style_config["checked_bgcolor"][control_state]
+            if self.state != CheckState.UNCHECKED
             else self.style_config["box_bgcolor"][control_state]
         )
-        
+
         self.checkbox.border = ft.border.all(
-            width=1,
-            color=self.style_config["border"][control_state].color
+            width=1, color=self.style_config["border"][control_state].color
         )
-        
+
         self.check_icon.color = self.style_config["check_color"][control_state]
 
         self.update()
@@ -224,7 +304,7 @@ class Checkbox(ft.Container):
         self._pressed = False
         old_state = self.state
         self.state = self._get_next_state()
-        
+
         # Animate the icon
         if old_state == CheckState.UNCHECKED:
             await self._animate_icon(True)

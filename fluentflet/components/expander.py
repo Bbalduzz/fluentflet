@@ -3,6 +3,7 @@ from typing import Union
 from fluentflet.components.button import Button, ButtonVariant
 from fluentflet.utils.fluent_design_system import FluentDesignSystem
 
+
 class Expander(ft.Container):
     def __init__(
         self,
@@ -15,32 +16,39 @@ class Expander(ft.Container):
     ):
         # Initialize design system
         self.design_system = FluentDesignSystem()
-        self.theme = self.design_system.dark_theme if is_dark_mode else self.design_system.light_theme
-        
+        self.theme = (
+            self.design_system.dark_theme
+            if is_dark_mode
+            else self.design_system.light_theme
+        )
+
         self._expanded = expand
         self._width = width
         self._header = (
-            header if isinstance(header, ft.Control) 
+            header
+            if isinstance(header, ft.Control)
             else ft.Text(
                 header,
-                size=int(self.design_system.font_sizes.body_font_size.replace("px", "")),
+                size=int(
+                    self.design_system.font_sizes.body_font_size.replace("px", "")
+                ),
                 font_family=self.design_system.font_families.font_family_text,
                 color=self.theme.colors.get_color("text_primary"),
             )
         )
         self._content = content
-        
+
         # Use Button component with design system
         self._expand_icon = Button(
             content=ft.Icon(
                 name=ft.icons.EXPAND_LESS if expand else ft.icons.EXPAND_MORE,
                 size=14,
-                color="#ffffff"
+                color="#ffffff",
             ),
             variant=ButtonVariant.HYPERLINK,
             on_click=self._toggle,
             design_system=self.design_system,
-            is_dark_mode=is_dark_mode
+            is_dark_mode=is_dark_mode,
         )
 
         # Calculate the content height
@@ -51,14 +59,14 @@ class Expander(ft.Container):
             bgcolor=self.theme.fills.get_fill("control_fill_tertiary"),
             border_radius=ft.border_radius.only(
                 bottom_left=self.design_system.control_properties.control_corner_radius,
-                bottom_right=self.design_system.control_properties.control_corner_radius
+                bottom_right=self.design_system.control_properties.control_corner_radius,
             ),
             padding=15,
             width=self._width,
             height=None if self._expanded else 0,
             animate=ft.animation.Animation(
                 duration=self.design_system.control_properties.control_normal_duration,
-                curve=ft.AnimationCurve.EASE_OUT
+                curve=ft.AnimationCurve.EASE_OUT,
             ),
             clip_behavior=ft.ClipBehavior.HARD_EDGE,
         )
@@ -75,8 +83,16 @@ class Expander(ft.Container):
             border_radius=ft.border_radius.only(
                 top_left=self.design_system.control_properties.control_corner_radius,
                 top_right=self.design_system.control_properties.control_corner_radius,
-                bottom_left=self.design_system.control_properties.control_corner_radius if not self._expanded else 0,
-                bottom_right=self.design_system.control_properties.control_corner_radius if not self._expanded else 0,
+                bottom_left=(
+                    self.design_system.control_properties.control_corner_radius
+                    if not self._expanded
+                    else 0
+                ),
+                bottom_right=(
+                    self.design_system.control_properties.control_corner_radius
+                    if not self._expanded
+                    else 0
+                ),
             ),
             padding=10,
             bgcolor=self.theme.fills.get_fill("control_fill_default"),
@@ -84,7 +100,7 @@ class Expander(ft.Container):
             width=self._width,
             animate=ft.animation.Animation(
                 duration=self.design_system.control_properties.control_normal_duration,
-                curve=ft.AnimationCurve.EASE_OUT
+                curve=ft.AnimationCurve.EASE_OUT,
             ),
         )
 
@@ -105,20 +121,28 @@ class Expander(ft.Container):
 
     def update_theme(self, is_dark_mode: bool):
         """Update expander theme colors"""
-        self.theme = self.design_system.dark_theme if is_dark_mode else self.design_system.light_theme
-        
+        self.theme = (
+            self.design_system.dark_theme
+            if is_dark_mode
+            else self.design_system.light_theme
+        )
+
         # Update header colors
         if isinstance(self._header, ft.Text):
             self._header.color = self.theme.colors.get_color("text_primary")
-        
+
         # Update expand icon theme
         self._expand_icon.update_theme(is_dark_mode)
-        
+
         # Update container colors
-        self._content_container.bgcolor = self.theme.fills.get_fill("control_fill_tertiary")
+        self._content_container.bgcolor = self.theme.fills.get_fill(
+            "control_fill_tertiary"
+        )
         self._header_row.bgcolor = self.theme.fills.get_fill("control_fill_default")
-        self._header_row.border = ft.border.all(1, self.theme.fills.get_fill("control_fill_default", 0.0578))
-        
+        self._header_row.border = ft.border.all(
+            1, self.theme.fills.get_fill("control_fill_default", 0.0578)
+        )
+
         self.update()
 
     def _toggle(self, *_):
@@ -128,7 +152,7 @@ class Expander(ft.Container):
             # Make content visible to measure it
             self._content_container.height = None
             self._content_container.update()
-            
+
             # Measure the content after rendering
             self._content.update()
             content_height = 0
@@ -137,7 +161,7 @@ class Expander(ft.Container):
                     content_height += control.height or 40  # Default height if None
             else:
                 content_height = self._content.height or 40
-            
+
             self._content_height = content_height
             self._content_container.height = self._content_height + 20
         else:
@@ -150,8 +174,16 @@ class Expander(ft.Container):
         self._header_row.border_radius = ft.border_radius.only(
             top_left=self.design_system.control_properties.control_corner_radius,
             top_right=self.design_system.control_properties.control_corner_radius,
-            bottom_left=self.design_system.control_properties.control_corner_radius if not self._expanded else 0,
-            bottom_right=self.design_system.control_properties.control_corner_radius if not self._expanded else 0,
+            bottom_left=(
+                self.design_system.control_properties.control_corner_radius
+                if not self._expanded
+                else 0
+            ),
+            bottom_right=(
+                self.design_system.control_properties.control_corner_radius
+                if not self._expanded
+                else 0
+            ),
         )
 
         self.update()
@@ -177,8 +209,16 @@ class Expander(ft.Container):
             self._header_row.border_radius = ft.border_radius.only(
                 top_left=self.design_system.control_properties.control_corner_radius,
                 top_right=self.design_system.control_properties.control_corner_radius,
-                bottom_left=self.design_system.control_properties.control_corner_radius if not value else 0,
-                bottom_right=self.design_system.control_properties.control_corner_radius if not value else 0,
+                bottom_left=(
+                    self.design_system.control_properties.control_corner_radius
+                    if not value
+                    else 0
+                ),
+                bottom_right=(
+                    self.design_system.control_properties.control_corner_radius
+                    if not value
+                    else 0
+                ),
             )
 
             self.update()

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 import flet as ft
 
+
 @dataclass
 class AccentColors:
     accent_light_3: str = "#FFB4D9"
@@ -11,6 +12,7 @@ class AccentColors:
     accent_dark_2: str = "#003A77"
     accent_dark_3: str = "#002952"
 
+
 @dataclass
 class ControlProperties:
     control_corner_radius: int = 4
@@ -20,12 +22,22 @@ class ControlProperties:
     control_fast_duration: int = 167
     control_faster_duration: int = 83
 
+
 @dataclass
 class FontFamilies:
-    font_family_fallback: str = '"Segoe UI", -apple-system, ui-sans-serif, system-ui, BlinkMacSystemFont, Helvetica, Arial, sans-serif'
-    font_family_text: str = '"Segoe UI Variable Text", "Seoge UI Variable Static Text", var(--fds-font-family-fallback)'
-    font_family_small: str = '"Segoe UI Variable Small", "Seoge UI Variable Static Small", var(--fds-font-family-fallback)'
-    font_family_display: str = '"Segoe UI Variable Display", "Seoge UI Variable Static Display", var(--fds-font-family-fallback)'
+    font_family_fallback: str = (
+        '"Segoe UI", -apple-system, ui-sans-serif, system-ui, BlinkMacSystemFont, Helvetica, Arial, sans-serif'
+    )
+    font_family_text: str = (
+        '"Segoe UI Variable Text", "Seoge UI Variable Static Text", var(--fds-font-family-fallback)'
+    )
+    font_family_small: str = (
+        '"Segoe UI Variable Small", "Seoge UI Variable Static Small", var(--fds-font-family-fallback)'
+    )
+    font_family_display: str = (
+        '"Segoe UI Variable Display", "Seoge UI Variable Static Display", var(--fds-font-family-fallback)'
+    )
+
 
 @dataclass
 class FontSizes:
@@ -37,6 +49,7 @@ class FontSizes:
     title_large_font_size: str = "40px"
     display_font_size: str = "68px"
 
+
 @dataclass
 class Shadows:
     card_shadow: ft.BoxShadow = field(
@@ -44,28 +57,28 @@ class Shadows:
             spread_radius=0,
             blur_radius=4,
             color=ft.Colors.with_opacity(0.04, "#000000"),
-            offset=ft.Offset(0, 2)
+            offset=ft.Offset(0, 2),
         )
     )
-    
+
     tooltip_shadow: ft.BoxShadow = field(
         default_factory=lambda: ft.BoxShadow(
             spread_radius=0,
             blur_radius=8,
             color=ft.Colors.with_opacity(0.14, "#000000"),
-            offset=ft.Offset(0, 4)
+            offset=ft.Offset(0, 4),
         )
     )
-    
+
     flyout_shadow: ft.BoxShadow = field(
         default_factory=lambda: ft.BoxShadow(
             spread_radius=0,
             blur_radius=16,
             color=ft.Colors.with_opacity(0.14, "#000000"),
-            offset=ft.Offset(0, 8)
+            offset=ft.Offset(0, 8),
         )
     )
-    
+
     # For dialog_shadow we need multiple shadows, so we'll return a list
     @property
     def dialog_shadow(self) -> list[ft.BoxShadow]:
@@ -74,16 +87,16 @@ class Shadows:
                 spread_radius=0,
                 blur_radius=64,
                 color=ft.Colors.with_opacity(0.1876, "#000000"),
-                offset=ft.Offset(0, 32)
+                offset=ft.Offset(0, 32),
             ),
             ft.BoxShadow(
                 spread_radius=0,
                 blur_radius=21,
                 color=ft.Colors.with_opacity(0.1474, "#000000"),
-                offset=ft.Offset(0, 2)
-            )
+                offset=ft.Offset(0, 2),
+            ),
         ]
-    
+
     # For inactive_window_shadow we need multiple shadows
     @property
     def inactive_window_shadow(self) -> list[ft.BoxShadow]:
@@ -92,16 +105,16 @@ class Shadows:
                 spread_radius=0,
                 blur_radius=32,
                 color=ft.Colors.with_opacity(0.18, "#000000"),
-                offset=ft.Offset(0, 16)
+                offset=ft.Offset(0, 16),
             ),
             ft.BoxShadow(
                 spread_radius=0,
                 blur_radius=10.67,
                 color=ft.Colors.with_opacity(0.1474, "#000000"),
-                offset=ft.Offset(0, 2)
-            )
+                offset=ft.Offset(0, 2),
+            ),
         ]
-    
+
     # For active_window_shadow we need multiple shadows
     @property
     def active_window_shadow(self) -> list[ft.BoxShadow]:
@@ -110,15 +123,16 @@ class Shadows:
                 spread_radius=0,
                 blur_radius=64,
                 color=ft.Colors.with_opacity(0.28, "#000000"),
-                offset=ft.Offset(0, 32)
+                offset=ft.Offset(0, 32),
             ),
             ft.BoxShadow(
                 spread_radius=0,
                 blur_radius=21,
                 color=ft.Colors.with_opacity(0.22, "#000000"),
-                offset=ft.Offset(0, 2)
-            )
+                offset=ft.Offset(0, 2),
+            ),
         ]
+
 
 @dataclass
 class ControlFills:
@@ -140,6 +154,7 @@ class ControlFills:
             return ft.Colors.with_opacity(override_opacity, fill_value)
         return fill_value
 
+
 @dataclass
 class LightControlFills(ControlFills):
     control_fill_default: str = ft.Colors.with_opacity(0.70, "#FFFFFF")
@@ -151,6 +166,7 @@ class LightControlFills(ControlFills):
     control_strong_fill_disabled: str = ft.Colors.with_opacity(0.317, "#000000")
     control_solid_fill_default: str = "#FFFFFF"
 
+
 @dataclass
 class DarkControlFills(ControlFills):
     control_fill_default: str = ft.Colors.with_opacity(0.061, "#FFFFFF")
@@ -161,6 +177,7 @@ class DarkControlFills(ControlFills):
     control_strong_fill_default: str = ft.Colors.with_opacity(0.544, "#FFFFFF")
     control_strong_fill_disabled: str = ft.Colors.with_opacity(0.247, "#FFFFFF")
     control_solid_fill_default: str = "#454545"
+
 
 @dataclass
 class BackgroundProperties:
@@ -174,11 +191,14 @@ class BackgroundProperties:
     card_background_secondary: str = None
     smoke_background_default: str = None
 
-    def get_background(self, background_name: str, override_opacity: float = None) -> str:
+    def get_background(
+        self, background_name: str, override_opacity: float = None
+    ) -> str:
         background_value = getattr(self, background_name)
         if override_opacity is not None:
             return ft.Colors.with_opacity(override_opacity, background_value)
         return background_value
+
 
 @dataclass
 class LightBackgrounds(BackgroundProperties):
@@ -192,6 +212,7 @@ class LightBackgrounds(BackgroundProperties):
     card_background_secondary: str = ft.Colors.with_opacity(0.50, "#F5F5F5")
     smoke_background_default: str = ft.Colors.with_opacity(0.30, "#000000")
 
+
 @dataclass
 class DarkBackgrounds(BackgroundProperties):
     solid_background_base: str = "#212121"
@@ -203,6 +224,7 @@ class DarkBackgrounds(BackgroundProperties):
     card_background_default: str = ft.Colors.with_opacity(0.0512, "#FFFFFF")
     card_background_secondary: str = ft.Colors.with_opacity(0.0326, "#FFFFFF")
     smoke_background_default: str = ft.Colors.with_opacity(0.30, "#000000")
+
 
 @dataclass
 class ThemeColors:
@@ -229,6 +251,7 @@ class ThemeColors:
             return ft.Colors.with_opacity(override_opacity, color_value)
         return color_value
 
+
 @dataclass
 class LightThemeColors(ThemeColors):
     text_primary: str = ft.Colors.with_opacity(0.896, "#000000")
@@ -248,6 +271,7 @@ class LightThemeColors(ThemeColors):
     text_on_accent_disabled: str = ft.Colors.with_opacity(0.70, "#FFFFFF")
     text_on_accent_selected: str = "#FFFFFF"
 
+
 @dataclass
 class DarkThemeColors(ThemeColors):
     text_primary: str = "#FFFFFF"
@@ -266,6 +290,7 @@ class DarkThemeColors(ThemeColors):
     text_on_accent_secondary: str = ft.Colors.with_opacity(0.50, "#000000")
     text_on_accent_disabled: str = ft.Colors.with_opacity(0.53, "#FFFFFF")
     text_on_accent_selected: str = "#FFFFFF"
+
 
 @dataclass
 class SystemColors:
@@ -288,6 +313,7 @@ class SystemColors:
             return ft.Colors.with_opacity(opacity, color_value)
         return color_value
 
+
 @dataclass
 class Theme:
     colors: ThemeColors = None
@@ -300,15 +326,15 @@ class Theme:
             if hasattr(category, property_name):
                 if opacity is not None:
                     # Use the category's specific get method with opacity
-                    if hasattr(category, 'get_background'):
+                    if hasattr(category, "get_background"):
                         return category.get_background(property_name, opacity)
-                    elif hasattr(category, 'get_fill'):
+                    elif hasattr(category, "get_fill"):
                         return category.get_fill(property_name, opacity)
-                    elif hasattr(category, 'get_color'):
+                    elif hasattr(category, "get_color"):
                         return category.get_color(property_name, opacity)
                 return getattr(category, property_name)
         raise AttributeError(f"Property {property_name} not found in theme")
-    
+
     def __getattr__(self, name: str):
         # Try each category in order
         for category in [self.backgrounds, self.fills, self.colors]:
@@ -316,17 +342,20 @@ class Theme:
                 return getattr(category, name)
         raise AttributeError(f"Property {name} not found in theme")
 
+
 @dataclass
 class LightTheme(Theme):
     colors: ThemeColors = field(default_factory=LightThemeColors)
     fills: ControlFills = field(default_factory=LightControlFills)
     backgrounds: BackgroundProperties = field(default_factory=LightBackgrounds)
 
+
 @dataclass
 class DarkTheme(Theme):
     colors: ThemeColors = field(default_factory=DarkThemeColors)
     fills: ControlFills = field(default_factory=DarkControlFills)
     backgrounds: BackgroundProperties = field(default_factory=DarkBackgrounds)
+
 
 @dataclass
 class FluentDesignSystem:

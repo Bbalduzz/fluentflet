@@ -1,4 +1,4 @@
-'''
+"""
 You can also navigate programmatically from anywhere:
 def handle_button_click(e):
     window.navigate("settings")
@@ -56,7 +56,7 @@ def user_profile(user_id: str = None):
 
 window.add_route("user_profile", user_profile)
 window.navigate("user_profile", user_id="123")
-'''
+"""
 
 import flet as ft
 from pathlib import Path
@@ -65,19 +65,23 @@ from fluentflet.components import ListItem, Button, ButtonVariant, ToolTip
 from fluentflet.utils import FluentIcon, FluentIcons
 from typing import Optional, Any, Callable, Union, Dict
 
+
 class NavigationType(Enum):
     """Navigation layout types for FluentWindow"""
+
     STANDARD = auto()  # Original layout that pushes content
-    OVERLAY = auto()   # Navigation overlays the content
+    OVERLAY = auto()  # Navigation overlays the content
+
 
 class NavigationDivider(ft.Container):
     def __init__(self):
         super().__init__(
-            height=.5,
+            height=0.5,
             margin=ft.margin.symmetric(vertical=8),
             bgcolor="#393939",
-            width=180
+            width=180,
         )
+
 
 class Titlebar(ft.Container):
     def __init__(
@@ -92,14 +96,14 @@ class Titlebar(ft.Container):
         on_minimize: Callable | None = None,
         on_maximize: Callable | None = None,
         on_close: Callable | None = None,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(**kwargs)
-        
+
         # Store configuration
         self.custom_content = content
         self.show_window_controls = show_window_controls
-        
+
         # Default title configuration
         self.title_config = {
             "text": title,
@@ -108,16 +112,20 @@ class Titlebar(ft.Container):
             "color": "white",
             "font_family": None,
             "text_align": ft.TextAlign.LEFT,
-            **(title_style or {})
+            **(title_style or {}),
         }
-        
+
         # Default icon configuration
         self.icon = (
-            icon if isinstance(icon, ft.Control)
-            else ft.Image(src=icon, width=15, height=15) if icon
-            else ft.Image("fluentflet/static/fluentflet.png", width=15, height=15)
+            icon
+            if isinstance(icon, ft.Control)
+            else (
+                ft.Image(src=icon, width=15, height=15)
+                if icon
+                else ft.Image("fluentflet/static/fluentflet.png", width=15, height=15)
+            )
         )
-        
+
         # Default window controls configuration
         self.window_controls_config = {
             "icon_size": 16,
@@ -127,33 +135,33 @@ class Titlebar(ft.Container):
             "icons": {
                 "minimize": ft.icons.REMOVE,
                 "maximize": ft.icons.CROP_SQUARE,
-                "close": ft.icons.CLOSE
+                "close": ft.icons.CLOSE,
             },
-            **(window_controls_style or {})
+            **(window_controls_style or {}),
         }
-        
+
         # Default layout configuration
         self.layout_config = {
             "alignment": ft.MainAxisAlignment.SPACE_BETWEEN,
             "spacing": 0,
             "expand": True,
             "title_spacing": 10,
-            **(layout or {})
+            **(layout or {}),
         }
-        
+
         # Event handlers
         self.on_minimize = on_minimize or self.minimize_window
         self.on_maximize = on_maximize or self.toggle_maximize_window
         self.on_close = on_close or self.close_window
-        
+
         # Set default container properties
-        self.height = kwargs.get('height', 50)
-        self.padding = kwargs.get('padding', ft.padding.only(left=20, right=8))
-        self.bgcolor = kwargs.get('bgcolor', "transparent")
-        
+        self.height = kwargs.get("height", 50)
+        self.padding = kwargs.get("padding", ft.padding.only(left=20, right=8))
+        self.bgcolor = kwargs.get("bgcolor", "transparent")
+
         # Initialize the titlebar content
         self.content = self.build_titlebar()
-    
+
     def build_title_section(self) -> ft.Control:
         """Build the title section with icon and text"""
         return ft.Row(
@@ -165,65 +173,71 @@ class Titlebar(ft.Container):
                     weight=self.title_config["weight"],
                     color=self.title_config["color"],
                     font_family=self.title_config["font_family"],
-                    text_align=self.title_config["text_align"]
-                )
+                    text_align=self.title_config["text_align"],
+                ),
             ],
-            spacing=self.layout_config["title_spacing"]
+            spacing=self.layout_config["title_spacing"],
         )
-    
+
     def build_window_controls(self) -> ft.Control:
         """Build the window control buttons"""
         cfg = self.window_controls_config
         return ft.Row(
             controls=[
                 Button(
-                    content=ft.Icon(cfg["icons"]["minimize"], 
-                                  color=cfg["icon_color"], 
-                                  size=cfg["icon_size"]),
+                    content=ft.Icon(
+                        cfg["icons"]["minimize"],
+                        color=cfg["icon_color"],
+                        size=cfg["icon_size"],
+                    ),
                     variant=cfg["button_variant"],
                     on_click=lambda _: self.on_minimize(),
                 ),
                 Button(
-                    content=ft.Icon(cfg["icons"]["maximize"], 
-                                  color=cfg["icon_color"], 
-                                  size=cfg["icon_size"]),
+                    content=ft.Icon(
+                        cfg["icons"]["maximize"],
+                        color=cfg["icon_color"],
+                        size=cfg["icon_size"],
+                    ),
                     variant=cfg["button_variant"],
                     on_click=lambda _: self.on_maximize(),
                 ),
                 Button(
-                    content=ft.Icon(cfg["icons"]["close"], 
-                                  color=cfg["icon_color"], 
-                                  size=cfg["icon_size"]),
+                    content=ft.Icon(
+                        cfg["icons"]["close"],
+                        color=cfg["icon_color"],
+                        size=cfg["icon_size"],
+                    ),
                     variant=cfg["button_variant"],
                     on_click=lambda _: self.on_close(),
                     on_hover=self.handle_close_hover,
-                )
+                ),
             ],
             spacing=0,
         )
-    
+
     def build_titlebar(self) -> ft.Control:
         """Build the complete titlebar layout"""
         controls = []
-        
+
         # Add title section if no custom content
         if not self.custom_content:
             controls.append(self.build_title_section())
         else:
             controls.append(self.custom_content)
-        
+
         # Add window controls if enabled
         if self.show_window_controls:
             if self.layout_config["expand"]:
                 controls.append(ft.Container(expand=True))
             controls.append(self.build_window_controls())
-        
+
         return ft.Row(
             controls=controls,
             alignment=self.layout_config["alignment"],
-            spacing=self.layout_config["spacing"]
+            spacing=self.layout_config["spacing"],
         )
-    
+
     def update_title(self, new_title: str):
         """Update the title text"""
         self.title_config["text"] = new_title
@@ -231,64 +245,67 @@ class Titlebar(ft.Container):
             self.content = self.build_titlebar()
             if self.page:
                 self.update()
-    
+
     def update_content(self, new_content: ft.Control):
         """Update the custom content"""
         self.custom_content = new_content
         self.content = self.build_titlebar()
         if self.page:
             self.update()
-    
+
     def handle_close_hover(self, e):
         """Handle hover effect on close button"""
         container = e.control
-        container.bgcolor = (self.window_controls_config["hover_color"] 
-                           if e.data == "true" else None)
+        container.bgcolor = (
+            self.window_controls_config["hover_color"] if e.data == "true" else None
+        )
         container.update()
-    
+
     def minimize_window(self):
         """Default minimize handler"""
         self.page.window.minimized = True
-    
+
     def toggle_maximize_window(self):
         """Default maximize handler"""
         self.page.window.maximized = not self.page.window.maximized
-    
+
     def close_window(self):
         """Default close handler"""
         self.page.window.close()
 
+
 class FluentState:
-   def __init__(self):
-       self._page = None
-       self._subscribers = {}
-       self._state = {}
+    def __init__(self):
+        self._page = None
+        self._subscribers = {}
+        self._state = {}
 
-   def _init_page(self, page: ft.Page):
-       self._page = page
-       self._load_initial_state()
+    def _init_page(self, page: ft.Page):
+        self._page = page
+        self._load_initial_state()
 
-   def _load_initial_state(self):
-       for key in self._page.session.get_keys():
-           self._state[key] = self._page.session.get(key)
+    def _load_initial_state(self):
+        for key in self._page.session.get_keys():
+            self._state[key] = self._page.session.get(key)
 
-   def set(self, key: str, value: any, persist: bool = False):
-       self._state[key] = value
-       if persist:
-           self._page.session.set(key, value)
-       if key in self._subscribers:
-           for callback in self._subscribers[key]:
-               callback(value)
+    def set(self, key: str, value: any, persist: bool = False):
+        self._state[key] = value
+        if persist:
+            self._page.session.set(key, value)
+        if key in self._subscribers:
+            for callback in self._subscribers[key]:
+                callback(value)
 
-   def get(self, key: str, default=None):
-       return self._state.get(key, default)
-           
-   def subscribe(self, key: str, callback: callable):
-       if key not in self._subscribers:
-           self._subscribers[key] = []
-       self._subscribers[key].append(callback)
-       if key in self._state:
-           callback(self._state[key])
+    def get(self, key: str, default=None):
+        return self._state.get(key, default)
+
+    def subscribe(self, key: str, callback: callable):
+        if key not in self._subscribers:
+            self._subscribers[key] = []
+        self._subscribers[key].append(callback)
+        if key in self._state:
+            callback(self._state[key])
+
 
 class FluentWindow:
     def __init__(
@@ -305,18 +322,26 @@ class FluentWindow:
         nav_item_spacing=2,
         nav_type: NavigationType = NavigationType.STANDARD,
         show_back_button=True,
-        state_manager: FluentState = FluentState
+        state_manager: FluentState = FluentState,
     ):
         self._page = page
         self._page.window.title_bar_hidden = True
         self._page.window.title_bar_buttons_hidden = True
         self._page.fonts = {
             "Segoe UI": str(Path("fluentflet/static/fonts/Segoe UI/Segoe UI.ttf")),
-            "Segoe UI Bold": str(Path("fluentflet/static/fonts/Segoe UI/Segoe UI Bold.ttf")),
-            "Segoe UI Italic": str(Path("fluentflet/static/fonts/Segoe UI/Segoe UI Italic.ttf")),
-            "Segoe UI Bold Italic": str(Path("fluentflet/static/fonts/Segoe UI/Segoe UI Bold Italic.ttf"))
+            "Segoe UI Bold": str(
+                Path("fluentflet/static/fonts/Segoe UI/Segoe UI Bold.ttf")
+            ),
+            "Segoe UI Italic": str(
+                Path("fluentflet/static/fonts/Segoe UI/Segoe UI Italic.ttf")
+            ),
+            "Segoe UI Bold Italic": str(
+                Path("fluentflet/static/fonts/Segoe UI/Segoe UI Bold Italic.ttf")
+            ),
         }
-        self._page.theme = ft.Theme(scrollbar_theme=ft.ScrollbarTheme(thickness=0.0), font_family="Segoe UI")
+        self._page.theme = ft.Theme(
+            scrollbar_theme=ft.ScrollbarTheme(thickness=0.0), font_family="Segoe UI"
+        )
         self._page.accepts_drops = True
         self._page.blur_effect = True
         self._page.padding = 0
@@ -325,42 +350,50 @@ class FluentWindow:
         self.nav_width_collapsed = nav_width_collapsed
         self.nav_width_expanded = nav_width_expanded
         self.nav_type = nav_type
-        
-        
+
         self.colors = {
             "nav_bg": "#1F1F1F",
             "content_bg": "#282828",
             "title_bar_bg": "#1F1F1F",
             "icon_color": "white",
             "text_color": "white",
-            "hover_color": "#c42b1c"
+            "hover_color": "#c42b1c",
         }
         if colors:
             self.colors.update(colors)
         if self._page.blur_effect:
-            self.colors["content_bg"] = ft.colors.with_opacity(0.3, self.colors["content_bg"])
+            self.colors["content_bg"] = ft.colors.with_opacity(
+                0.3, self.colors["content_bg"]
+            )
             self.colors["nav_bg"] = ft.colors.with_opacity(0.3, self.colors["nav_bg"])
-        
+
         self._page.bgcolor = self.colors["nav_bg"]
-        
+
         # Initialize main layout components
         self.nav_item_spacing = nav_item_spacing
-        self.navigation_items = navigation_items or [{"icon": FluentIcons.HOME, "label": "Home"}]
-        self.bottom_navigation_items = bottom_navigation_items or [{"icon": FluentIcons.SETTINGS, "label": "Settings"},]
-        
+        self.navigation_items = navigation_items or [
+            {"icon": FluentIcons.HOME, "label": "Home"}
+        ]
+        self.bottom_navigation_items = bottom_navigation_items or [
+            {"icon": FluentIcons.SETTINGS, "label": "Settings"},
+        ]
+
         # Handle window_title based on type
-        self.titlebar = (window_titlebar if isinstance(window_titlebar, Titlebar) 
-                        else Titlebar(title=str(window_titlebar)))
-        
+        self.titlebar = (
+            window_titlebar
+            if isinstance(window_titlebar, Titlebar)
+            else Titlebar(title=str(window_titlebar))
+        )
+
         # Create the main layout
         self.create_layout(
             nav_width_collapsed=nav_width_collapsed,
             nav_width_expanded=nav_width_expanded,
             animation_duration=animation_duration,
             show_back_button=show_back_button,
-            selected_index=selected_index
+            selected_index=selected_index,
         )
-        
+
         # Set up window event handling
         self._page.window.on_event = self._handle_window_event
 
@@ -372,7 +405,9 @@ class FluentWindow:
         if navigation_items:
             for idx, item in enumerate(navigation_items):
                 if "label" in item:
-                    route = item.get("route", "/" + item["label"].lower().replace(" ", "-"))
+                    route = item.get(
+                        "route", "/" + item["label"].lower().replace(" ", "-")
+                    )
                     self.route_to_nav_index[route] = idx
 
         self._page.on_route_change = self._handle_route_change
@@ -382,20 +417,27 @@ class FluentWindow:
 
     def route(self, path: str, is_template: bool = False):
         """Decorator for registering routes
-        
+
         Args:
             path: Route path (e.g., "/users" or "/users/:id")
             is_template: Whether this is a template route with parameters
         """
+
         def decorator(view_func):
             self.add_route(path, view_func, is_template)
             return view_func
+
         return decorator
 
-    def add_route(self, route: str, view_builder: Callable[..., ft.Control], is_template: bool = False):
+    def add_route(
+        self,
+        route: str,
+        view_builder: Callable[..., ft.Control],
+        is_template: bool = False,
+    ):
         """
         Add a route with a view builder that can accept parameters.
-        
+
         Args:
             route: The route pattern (e.g., "/user" or "/user/:id" for templates)
             view_builder: Function that returns a Control, can accept route parameters
@@ -409,7 +451,7 @@ class FluentWindow:
     def navigate(self, route: str, **params):
         """
         Navigate to a route with optional parameters.
-        Updates browser history 
+        Updates browser history
         and triggers route change handling.
         Args:
             route: The route to navigate to
@@ -421,7 +463,7 @@ class FluentWindow:
             # Replace template parameters in route
             for key, value in params.items():
                 full_route = full_route.replace(f":{key}", str(value))
-        
+
         # Update page route (this will trigger route change handler)
         self._page.route = full_route
         self._page.update()
@@ -447,13 +489,19 @@ class FluentWindow:
             self._nav_item_intern.append(_item)
             return list_item
 
-    def create_layout(self, nav_width_collapsed, nav_width_expanded, 
-                    animation_duration, show_back_button, selected_index):
+    def create_layout(
+        self,
+        nav_width_collapsed,
+        nav_width_expanded,
+        animation_duration,
+        show_back_button,
+        selected_index,
+    ):
         """Create the main layout based on navigation type"""
 
         self.nav_items = []
         self._nav_item_intern = []
-        
+
         # Track the actual index (excluding dividers) for navigation
         self.nav_index_map = {}
         actual_index = 0
@@ -461,7 +509,7 @@ class FluentWindow:
         for idx, item in enumerate(self.navigation_items):
             nav_item = self.create_nav_item(item, actual_index)
             self.nav_items.append(nav_item)
-            
+
             if item.get("type") != "divider":
                 self.nav_index_map[actual_index] = idx
                 actual_index += 1
@@ -469,35 +517,37 @@ class FluentWindow:
         # Create navigation rail content
         nav_top_controls = []
         if show_back_button:
-            nav_top_controls.extend([
-                ft.Container(
-                    content=Button(
-                        content=FluentIcon(
-                            FluentIcons.ARROW_LEFT,
-                            size=18,
-                            color=self.colors["icon_color"],
+            nav_top_controls.extend(
+                [
+                    ft.Container(
+                        content=Button(
+                            content=FluentIcon(
+                                FluentIcons.ARROW_LEFT,
+                                size=18,
+                                color=self.colors["icon_color"],
+                            ),
+                            variant=ButtonVariant.HYPERLINK,
+                            disabled=False,
                         ),
-                        variant=ButtonVariant.HYPERLINK,
-                        disabled=False
+                        margin=ft.margin.only(top=10),
                     ),
-                    margin=ft.margin.only(top=10)
-                ),
-                ft.Container(height=20),
-            ])
-        
+                    ft.Container(height=20),
+                ]
+            )
+
         nav_top_controls.append(
             ft.Container(
                 content=Button(
                     content=FluentIcon(
                         FluentIcons.TEXT_ALIGN_JUSTIFY,
                         size=18,
-                        color=self.colors["icon_color"]
+                        color=self.colors["icon_color"],
                     ),
                     on_click=lambda e: self.toggle_navigation_panel(e),
                     variant=ButtonVariant.HYPERLINK,
                     is_dark_mode=True,
                 ),
-                margin=ft.margin.only(top=10 if not show_back_button else 0, bottom=10)
+                margin=ft.margin.only(top=10 if not show_back_button else 0, bottom=10),
             )
         )
 
@@ -516,7 +566,7 @@ class FluentWindow:
                         spacing=self.nav_item_spacing,
                         horizontal_alignment=ft.CrossAxisAlignment.START,
                     ),
-                    margin=ft.margin.only(left=5)
+                    margin=ft.margin.only(left=5),
                 ),
                 ft.Container(
                     content=ft.Column(
@@ -527,14 +577,18 @@ class FluentWindow:
                     expand=True,
                     clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
                 ),
-                ft.Column(
-                    controls=bottom_nav_items,
-                    spacing=2,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                ) if bottom_nav_items else None
+                (
+                    ft.Column(
+                        controls=bottom_nav_items,
+                        spacing=2,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    )
+                    if bottom_nav_items
+                    else None
+                ),
             ],
             spacing=0,
-            expand=True
+            expand=True,
         )
 
         self.nav_rail = ft.Container(
@@ -546,19 +600,15 @@ class FluentWindow:
             animate_size=ft.animation.Animation(animation_duration, "easeOut"),
             animate=ft.animation.Animation(animation_duration, "easeOut"),
             blur=None,
-            border_radius=ft.border_radius.only(
-                top_right=0,
-                bottom_right=0
-            ),
+            border_radius=ft.border_radius.only(top_right=0, bottom_right=0),
             border=None,
-            shadow=None
+            shadow=None,
         )
         self.nav_rail_wrapper = ft.Container(
             content=self.nav_rail,
             shadow=None,
-            animate=ft.animation.Animation(animation_duration, "easeOut")
+            animate=ft.animation.Animation(animation_duration, "easeOut"),
         )
-
 
         # Create the content container
         self.content_container = ft.Container(
@@ -584,7 +634,11 @@ class FluentWindow:
                 spacing=0,
                 expand=True,
             ),
-            margin = ft.margin.only(left=1) if self.nav_type == NavigationType.STANDARD else ft.margin.only(left=self.nav_width_collapsed)
+            margin=(
+                ft.margin.only(left=1)
+                if self.nav_type == NavigationType.STANDARD
+                else ft.margin.only(left=self.nav_width_collapsed)
+            ),
         )
 
         if self.nav_type == NavigationType.OVERLAY:
@@ -617,17 +671,13 @@ class FluentWindow:
     def create_nav_row(self, icon, label):
         return ft.Row(
             controls=[
-                FluentIcon(
-                    icon,
-                    size=18,
-                    color=self.colors["icon_color"]
-                ),
+                FluentIcon(icon, size=18, color=self.colors["icon_color"]),
                 ft.Text(
                     label,
                     color=self.colors["text_color"],
                     size=14,
                     opacity=0,
-                )
+                ),
             ],
             alignment=ft.MainAxisAlignment.START,
             spacing=12,
@@ -636,12 +686,11 @@ class FluentWindow:
     def toggle_navigation_panel(self, e=None):
         """Toggle navigation panel based on navigation type"""
         self.is_nav_expanded = not self.is_nav_expanded
-        
+
         if self.is_nav_expanded:
             self.nav_rail.width = self.nav_width_expanded
             self.nav_rail.border_radius = ft.border_radius.only(
-                top_right=8,
-                bottom_right=8
+                top_right=8, bottom_right=8
             )
             self.nav_rail.blur = ft.Blur(20, 20, ft.BlurTileMode.MIRROR)
             self.nav_rail.border = ft.border.all(1, "#313131")
@@ -649,28 +698,28 @@ class FluentWindow:
                 spread_radius=0,
                 blur_radius=8,
                 color=ft.colors.with_opacity(0.2, "#000000"),
-                offset=ft.Offset(2, 0)
+                offset=ft.Offset(2, 0),
             )
         else:
             self.nav_rail.width = self.nav_width_collapsed
             self.nav_rail.bgcolor = self.colors["nav_bg"]
             self.nav_rail.blur = None
             self.nav_rail.border_radius = ft.border_radius.only(
-                top_right=0,
-                bottom_right=0
+                top_right=0, bottom_right=0
             )
             self.nav_rail.border = None
             self.nav_rail_wrapper.shadow = None
-        
 
         for item in self._nav_item_intern:
             if isinstance(item, ft.Row):
                 item.controls[1].opacity = 1 if self.is_nav_expanded else 0
-                item.alignment = (ft.MainAxisAlignment.START 
-                                if self.is_nav_expanded 
-                                else ft.MainAxisAlignment.CENTER)
+                item.alignment = (
+                    ft.MainAxisAlignment.START
+                    if self.is_nav_expanded
+                    else ft.MainAxisAlignment.CENTER
+                )
                 item.update()
-        
+
         self.nav_rail.update()
 
     def select_nav_item(self, index: int):
@@ -679,7 +728,7 @@ class FluentWindow:
         for item in self.nav_items:
             if isinstance(item, ListItem):
                 item.selected = False  # Using the new selected property
-        
+
         # Find the actual item to select
         actual_idx = self.nav_index_map.get(index)
         if actual_idx is not None:
@@ -691,7 +740,7 @@ class FluentWindow:
     def handle_nav_click(self, index: int):
         """Handle navigation item click and route change"""
         self.select_nav_item(index)
-        
+
         # Get the actual route from the navigation item
         actual_idx = self.nav_index_map.get(index)
         if actual_idx is not None:
@@ -701,7 +750,7 @@ class FluentWindow:
             else:  # Fallback to the old behavior
                 route = nav_item["label"].lower()
                 self.navigate(route)
-        
+
         # Update navigation items' visual state
         for item in self.nav_items:
             if isinstance(item, ListItem):
@@ -710,7 +759,7 @@ class FluentWindow:
     def _handle_route_change(self, e):
         """Handle route changes from both navigation and browser history"""
         route = e.route
-        
+
         # First try exact routes
         if route in self.routes:
             view = self.routes[route]()
@@ -718,39 +767,39 @@ class FluentWindow:
             # Try template routes
             matched_builder = None
             matched_params = {}
-            
+
             for template, builder in self.template_routes.items():
                 # Simple template matching (can be enhanced with regex)
-                template_parts = template.split('/')
-                route_parts = route.split('/')
-                
+                template_parts = template.split("/")
+                route_parts = route.split("/")
+
                 if len(template_parts) == len(route_parts):
                     params = {}
                     matches = True
-                    
+
                     for t_part, r_part in zip(template_parts, route_parts):
-                        if t_part.startswith(':'):
+                        if t_part.startswith(":"):
                             params[t_part[1:]] = r_part
                         elif t_part != r_part:
                             matches = False
                             break
-                    
+
                     if matches:
                         matched_builder = builder
                         matched_params = params
                         break
-            
+
             if matched_builder:
                 view = matched_builder(**matched_params)
             else:
                 # Default to home route if no match
-                view = self.routes.get('/', lambda: ft.Text("404 - Not Found"))()
-        
+                view = self.routes.get("/", lambda: ft.Text("404 - Not Found"))()
+
         # Update the view
         self.content_container.content.controls = [view]
         self.content_container.update()
         self.current_route = route
-        
+
         # Update navigation selection if route exists in navigation items
         if route in self.route_to_nav_index:
             idx = self.route_to_nav_index[route]
@@ -767,9 +816,11 @@ class FluentWindow:
         """Override add to use our content container"""
         self.content_container.content.controls = list(controls)
         for control in controls:
-            if hasattr(control, 'expand') and not isinstance(control, (ft.Text, ft.Icon)):
+            if hasattr(control, "expand") and not isinstance(
+                control, (ft.Text, ft.Icon)
+            ):
                 control.expand = True
-            if hasattr(control, 'width'):
+            if hasattr(control, "width"):
                 control.width = None
         self.content_container.update()
 

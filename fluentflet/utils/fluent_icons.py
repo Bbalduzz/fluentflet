@@ -3,9 +3,11 @@ from enum import Enum
 from pathlib import Path
 import re
 
+
 class FluentIconStyle(Enum):
-    FILLED = 'filled'
-    REGULAR = 'regular'
+    FILLED = "filled"
+    REGULAR = "regular"
+
 
 class FluentIcons(Enum):
     ACCESS_TIME = "access_time"
@@ -1506,20 +1508,25 @@ class FluentIcons(Enum):
     ZOOM_IN = "zoom_in"
     ZOOM_OUT = "zoom_out"
 
+
 class FluentIcon(ft.Image):
-    def __init__(self, name: FluentIcons, style: FluentIconStyle = FluentIconStyle.REGULAR, color: str = "#ffffff", size: int = 24):
+    def __init__(
+        self,
+        name: FluentIcons,
+        style: FluentIconStyle = FluentIconStyle.REGULAR,
+        color: str = "#ffffff",
+        size: int = 24,
+    ):
         if name in FluentIcons:
-            icon_path = Path(f"fluentflet/static/icons/ic_fluent_{name.value}_24_{style.value}.svg")
-            with open(icon_path, 'r') as f:
+            icon_path = Path(
+                f"fluentflet/static/icons/ic_fluent_{name.value}_24_{style.value}.svg"
+            )
+            with open(icon_path, "r") as f:
                 svg_content = f.read()
-            
+
             if color:
                 svg_content = re.sub(r'fill="[^"]+"', f'fill="{color}"', svg_content)
-                
-            super().__init__(
-                src=svg_content,
-                width=size,
-                height=size
-            )
+
+            super().__init__(src=svg_content, width=size, height=size)
         else:
             raise Exception("No icon named", name)
